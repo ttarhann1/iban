@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#fbf6f1">
+<meta name="robots" content="noindex">
+<title>Ödeme Bilgileri</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Manrope:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: one centred card over slow drifting warm light; name → bank → IBAN with a single primary copy action */
+:root{
+  --ground:#fbf6f1;      /* warm white */
+  --card:rgba(255,255,255,.78);
+  --ink:#3a2e27;         /* warm brown-black */
+  --mute:#8f7d71;
+  --line:#efe2d6;
+  --apricot:#e8875a;     /* accent */
+  --apricot-deep:#c96a3f;
+  --honey:#f2cf8f;
+  --rose:#efb3a3;
+  --ok:#5e8c62;
+  --f-display:"Young Serif", Georgia, serif;
+  --f-body:"Manrope", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Menlo, monospace;
+  --ease:cubic-bezier(.22,.7,.2,1);
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--f-body);font-size:15.5px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+:focus-visible{outline:2px solid var(--apricot);outline-offset:3px;border-radius:10px}
+
+/* ambient background */
+.sky{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(60px);opacity:.55;will-change:transform}
+.b1{width:60vmax;height:60vmax;left:-20vmax;top:-22vmax;background:var(--honey);animation:d1 26s ease-in-out infinite alternate}
+.b2{width:52vmax;height:52vmax;right:-22vmax;top:18vh;background:var(--rose);animation:d2 30s ease-in-out infinite alternate}
+.b3{width:46vmax;height:46vmax;left:10vw;bottom:-26vmax;background:#f6b78f;opacity:.45;animation:d3 34s ease-in-out infinite alternate}
+@keyframes d1{to{transform:translate(14vmax,10vmax) scale(1.1)}}
+@keyframes d2{to{transform:translate(-12vmax,-8vmax) scale(.92)}}
+@keyframes d3{to{transform:translate(8vmax,-12vmax) scale(1.08)}}
+.grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.35;mix-blend-mode:multiply}
+.rings{position:fixed;left:50%;top:50%;z-index:1;pointer-events:none;width:0;height:0}
+.rings i{position:absolute;left:0;top:0;width:340px;height:340px;margin:-170px;border:1px solid rgba(232,135,90,.18);border-radius:50%;animation:ring 7.5s linear infinite;opacity:0}
+.rings i:nth-child(2){animation-delay:2.5s}.rings i:nth-child(3){animation-delay:5s}
+@keyframes ring{0%{transform:scale(.6);opacity:0}15%{opacity:1}100%{transform:scale(2.6);opacity:0}}
+
+/* page */
+main{position:relative;z-index:2;min-height:100svh;display:grid;place-items:center;padding-inline:16px;padding-block:40px}
+.card{width:min(100%,420px);background:var(--card);backdrop-filter:blur(18px) saturate(1.2);-webkit-backdrop-filter:blur(18px) saturate(1.2);
+  border:1px solid rgba(255,255,255,.9);border-radius:28px;padding:30px 24px 24px;box-shadow:0 1px 0 rgba(255,255,255,.8) inset,0 30px 60px -30px rgba(120,70,40,.35);
+  animation:rise 1s var(--ease) both}
+@keyframes rise{from{opacity:0;transform:translateY(24px) scale(.98)}}
+
+.head{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px}
+.avatar{width:68px;height:68px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-display);font-size:26px;color:#fff;
+  background:linear-gradient(140deg,var(--honey),var(--apricot) 55%,var(--apricot-deep));box-shadow:0 10px 24px -10px rgba(201,106,63,.6);position:relative}
+.avatar::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:1px solid rgba(232,135,90,.35)}
+.eyebrow{font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--mute);font-weight:600;display:flex;align-items:center;gap:6px}
+.eyebrow svg{width:14px;height:14px}
+h1{font-family:var(--f-display);font-weight:400;font-size:clamp(26px,7vw,32px);line-height:1.15;margin:0;text-wrap:balance}
+
+.rows{margin-top:24px;display:grid;gap:10px}
+.row{background:rgba(255,255,255,.7);border:1px solid var(--line);border-radius:18px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  animation:rise .9s var(--ease) both}
+.row:nth-child(1){animation-delay:.15s}.row:nth-child(2){animation-delay:.25s}
+.row .k{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);font-weight:600}
+.row .v{font-weight:600;font-size:16px;margin-top:2px;overflow-wrap:anywhere}
+.row>div{min-width:0}
+.mini{flex:none;display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--apricot-deep);padding:8px 12px;border-radius:999px;background:#fdf0e7;transition:background .25s}
+.mini:hover{background:#fbe3d3}
+.mini svg{width:14px;height:14px}
+
+.iban{margin-top:10px;border-radius:22px;padding:18px 16px 16px;background:linear-gradient(160deg,#fff7f0,#fdebdc);border:1px solid #f6d9c4;animation:rise .9s .35s var(--ease) both;position:relative;overflow:hidden}
+.iban::before{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.7) 50%,transparent 70%);transform:translateX(-100%);animation:sheen 6s 1.4s ease-in-out infinite}
+@keyframes sheen{0%,70%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.iban .k{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);font-weight:600;position:relative}
+.digits{position:relative;font-family:var(--f-mono);font-size:clamp(17px,5.2vw,20px);letter-spacing:.02em;margin:8px 0 16px;display:flex;flex-wrap:wrap;gap:4px 10px;font-variant-numeric:tabular-nums;user-select:all}
+.digits span{opacity:0;transform:translateY(6px);animation:dg .5s var(--ease) forwards}
+@keyframes dg{to{opacity:1;transform:none}}
+.copy{position:relative;width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:15px 18px;border-radius:16px;font-weight:600;font-size:16px;color:#fff;
+  background:linear-gradient(180deg,var(--apricot),var(--apricot-deep));box-shadow:0 12px 24px -12px rgba(201,106,63,.8),0 1px 0 rgba(255,255,255,.35) inset;transition:transform .15s,background .3s,box-shadow .3s}
+.copy:active{transform:scale(.98)}
+.copy svg{width:18px;height:18px}
+.copy .ic-ok{display:none}
+.copy.done{background:linear-gradient(180deg,#6f9c73,var(--ok));box-shadow:0 12px 24px -12px rgba(94,140,98,.8)}
+.copy.done .ic-copy{display:none}.copy.done .ic-ok{display:block;animation:pop .4s var(--ease)}
+@keyframes pop{from{transform:scale(.4)}}
+
+.note{margin:18px 4px 0;font-size:13.5px;color:var(--mute);text-align:center;text-wrap:balance}
+.note b{color:var(--ink);font-weight:600}
+.steps{margin:18px 0 0;padding:14px 16px;border-top:1px dashed var(--line);display:grid;gap:8px;font-size:13.5px;color:var(--mute);list-style:none}
+.steps li{display:flex;gap:10px;align-items:flex-start}
+.steps li span{flex:none;width:20px;height:20px;border-radius:50%;background:#fdf0e7;color:var(--apricot-deep);font-size:11.5px;font-weight:600;display:grid;place-items:center;margin-top:1px}
+.foot{margin-top:18px;text-align:center;font-size:12px;color:var(--mute);display:flex;align-items:center;justify-content:center;gap:6px}
+.foot svg{width:14px;height:14px}
+
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,16px);opacity:0;z-index:10;background:var(--ink);color:#fff;font-size:14px;padding:11px 18px;border-radius:999px;transition:.3s var(--ease);pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;animation-delay:0s!important;transition-duration:.01ms!important}
+  .rings{display:none}
+}
+</style>
+</head>
+<body>
+
+
+<div class="sky" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+<canvas class="grain" id="grain" aria-hidden="true"></canvas>
+<div class="rings" aria-hidden="true"><i></i><i></i><i></i></div>
+
+<main>
+  <section class="card" aria-labelledby="name">
+    <div class="head">
+      <div class="eyebrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 8.5a6 6 0 0 1 0 7M9.5 6a10 10 0 0 1 0 12M13 3.5a14 14 0 0 1 0 17"/></svg>Ödeme Bilgileri</div>
+      <h1 id="name"></h1>
+    </div>
+
+    <div class="rows">
+      <div class="row">
+        <div><div class="k">Alıcı adı</div><div class="v" id="holder"></div></div>
+        <button class="mini" id="copyName" aria-label="Alıcı adını kopyala">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="3"/><path d="M5 15V6a3 3 0 0 1 3-3h8"/></svg>Kopyala</button>
+      </div>
+      <div class="row">
+        <div><div class="k">Banka</div><div class="v" id="bank"></div></div>
+      </div>
+    </div>
+
+    <div class="iban">
+      <div class="k">IBAN</div>
+      <div class="digits" id="digits" aria-label="IBAN"></div>
+      <button class="copy" id="copyIban">
+        <svg class="ic-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="3"/><path d="M5 15V6a3 3 0 0 1 3-3h8"/></svg>
+        <svg class="ic-ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+        <span id="copyLabel">IBAN’ı Kopyala</span>
+      </button>
+    </div>
+
+    <ol class="steps">
+      <li><span>1</span>IBAN’ı kopyalayın.</li>
+      <li><span>2</span>Bankanızın uygulamasında “Para Gönder → IBAN’a” bölümünü açın.</li>
+      <li><span>3</span>IBAN’ı ve alıcı adını yapıştırıp gönderin.</li>
+    </ol>
+
+    <div class="foot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>Bu sayfa yalnızca bilgi gösterir, ödeme almaz.</div>
+  </section>
+</main>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ======= BİLGİLERİ BURADAN DEĞİŞTİR ======= */
+const INFO = {
+  title:  "Liner Baskı",                          // sayfanın başlığı
+  holder: "Muhammet Harun Göktaş",                          // bankadaki alıcı adı
+  bank:   "Ziraat Bankası",
+  iban:   "TR40 0001 0090 1024 4195 6050 13"   // örnek, gerçek değil
+};
+/* ========================================== */
+
+const $=s=>document.getElementById(s);
+const clean=INFO.iban.replace(/\s+/g,"").toUpperCase();
+const groups=clean.match(/.{1,4}/g)||[];
+$("name").textContent=INFO.title;
+$("holder").textContent=INFO.holder;
+$("bank").textContent=INFO.bank;
+$("digits").innerHTML=groups.map((g,i)=>`<span style="animation-delay:${.55+i*.07}s">${g}</span>`).join("");
+
+function toast(m){const t=$("toast");t.textContent=m;t.classList.add("show");clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove("show"),2000)}
+async function copyText(text){
+  try{await navigator.clipboard.writeText(text);return true}catch(e){}
+  try{const ta=document.createElement("textarea");ta.value=text;ta.setAttribute("readonly","");ta.style.cssText="position:fixed;opacity:0";document.body.appendChild(ta);ta.select();ta.setSelectionRange(0,999);
+    const ok=document.execCommand("copy");ta.remove();return ok}catch(e){return false}
+}
+$("copyIban").addEventListener("click",async()=>{
+  const ok=await copyText(clean),b=$("copyIban");
+  if(ok){b.classList.add("done");$("copyLabel").textContent="Kopyalandı";toast("IBAN panoya kopyalandı");if(navigator.vibrate)navigator.vibrate(30);
+    clearTimeout(b.h);b.h=setTimeout(()=>{b.classList.remove("done");$("copyLabel").textContent="IBAN’ı Kopyala"},2400)}
+  else{const r=document.createRange();r.selectNodeContents($("digits"));const s=getSelection();s.removeAllRanges();s.addRange(r);toast("IBAN seçildi, uzun basıp kopyalayın")}
+});
+$("copyName").addEventListener("click",async()=>{toast(await copyText(INFO.holder)?"Alıcı adı kopyalandı":"Kopyalanamadı, lütfen elle seçin")});
+
+/* soft paper grain */
+(()=>{const c=$("grain"),x=c.getContext("2d");c.width=160;c.height=160;const d=x.createImageData(160,160);
+  for(let i=0;i<d.data.length;i+=4){const v=200+Math.random()*55;d.data[i]=v;d.data[i+1]=v*.97;d.data[i+2]=v*.93;d.data[i+3]=22}
+  x.putImageData(d,0,0);c.style.width="100%";c.style.height="100%";c.style.imageRendering="auto";
+  c.style.background=`url(${c.toDataURL()})`;x.clearRect(0,0,160,160)})();
+</script>
+
+</body>
+</html>
